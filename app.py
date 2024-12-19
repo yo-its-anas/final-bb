@@ -143,7 +143,7 @@ with st.form("blood_bank_form"):
     submitted = st.form_submit_button("🔍 Find Blood Bank")
 
 if submitted:
-    st.markdown("Available Blood Banks")
+    st.markdown("f"#### Available Blood Banks")
     filtered_banks = blood_banks[blood_banks['location'] == location]
     available_banks = filtered_banks[filtered_banks['blood_groups'].apply(lambda x: blood_group in x)]
     
