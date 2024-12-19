@@ -64,21 +64,6 @@ st.markdown("""
         .button:hover {
             background-color: #4682b4;
         }
-        .stylish-box {
-            background-color: #ffffff;
-            padding: 15px;
-            margin: 10px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid #1e90ff;
-        }
-        .blue-link {
-            color: #1e90ff;
-            text-decoration: underline;
-        }
-        .header, .stylish-box h3 {
-            color: #1e90ff;
-        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -114,14 +99,13 @@ elif auth_option == "Sign In":
         signin_submit = st.form_submit_button("Sign In")
 
     if signin_submit:
-        # Dummy validation: Accept any non-empty username and password
-        if username_input and password_input:
+        valid_user = any(user["username"] == username_input and user["password"] == password_input for user in users_db.values())
+        if valid_user:
             st.session_state["logged_in_user"] = username_input
-            st.sidebar.success(f"👋 Welcome, {username_input}!")
-            st.markdown(f"## Hello {username_input}, welcome to the Karachi Blood Bank Finder! 😊")
+            st.sidebar.success(f"👋 Welcome back, {username_input}!")
             st.sidebar.button("Log Out", on_click=lambda: st.session_state.pop("logged_in_user"))
         else:
-            st.sidebar.error("❌ Please enter a valid Username and Password.")
+            st.sidebar.error("❌ Invalid Username or Password!")
 
 # Main App Page - Blood Bank Finder
 st.markdown(f"### Welcome to Karachi Blood Bank Finder 🩸")
@@ -153,44 +137,25 @@ blood_banks = pd.DataFrame([
 ])
 
 # User Input for Blood Bank Finder (Always Visible)
-with st.form("blood_search"):
-    blood_group_needed = st.selectbox("Select Required Blood Group", ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"])
-    user_location = st.text_input("Enter your Location (City Name)")
+with st.form("blood_bank_form"):
+    location = st.selectbox("📍 Select Your Location", blood_banks["location"].unique())
+    blood_group = st.selectbox("🩸 Select Required Blood Group", ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"])
+    submitted = st.form_submit_button("🔍 Find Blood Bank")
 
-    submit_button = st.form_submit_button("Search Blood Banks")
-
-# Display available blood banks
-if submit_button:
-    if user_location.strip():
-        st.subheader("Available Blood Banks near you:")
-        available_banks = blood_banks[blood_banks["blood_groups"].apply(lambda x: blood_group_needed in x)]
-        if available_banks.empty:
-            st.markdown(f"❌ No blood banks available with **{blood_group_needed}** in your location.")
-            st.markdown("However, here are the nearest blood banks:")
-            
-            # Calculate nearest available blood banks
-            available_banks = blood_banks.copy()
-            available_banks['distance'] = available_banks['coordinates'].apply(lambda x: geopy_distance.distance((24.8607, 67.0011), x).km)
-            nearest_banks = available_banks.sort_values("distance").head(3)
-            
-            for _, bank in nearest_banks.iterrows():
-                st.markdown(f"### {bank['name']}")
-                st.markdown(f"📍 Location: {bank['location']}")
-                st.markdown(f"🩸 Available Blood Groups: {', '.join(bank['blood_groups'])}")
-                st.markdown(f"📞 Contact: +92-{random.randint(3000000000, 3999999999)}")
-                st.markdown(f"🌐 Website: [Visit]({bank['name'].lower().replace(' ', '')}.domain.com)")
-                st.markdown(f"📍 Distance: {round(bank['distance'], 2)} km")
-                st.markdown("---")
-        else:
-            for _, bank in available_banks.iterrows():
-                st.markdown(f"""
-                    <div class="stylish-box">
-                        <h3>{bank['name']}</h3>
-                        <p>📍 Location: {bank['location']}</p>
-                        <p>🩸 Available Blood Groups: {', '.join(bank['blood_groups'])}</p>
-                        <p>📞 Contact: +92-{random.randint(3000000000, 3999999999)}</p>
-                        <p>🌐 Website: <a href="http://{bank['name'].lower().replace(' ', '')}.domain.com" class="blue-link" target="_blank">Visit</a></p>
-                    </div>
-                """, unsafe_allow_html=True)
+if submitted:
+    st.markdown(f"### Blood Banks in **{location}** for **{blood_group}**")
+    filtered_banks = blood_banks[blood_banks['location'] == location]
+    available_banks = filtered_banks[filtered_banks['blood_groups'].apply(lambda x: blood_group in x)]
+    
+    if available_banks.empty:
+        st.write("❌ No blood banks available with this blood group.")
     else:
-        st.warning("Please enter a location.")
+        for index, bank in available_banks.iterrows():
+            st.markdown(f"#### {bank['name']} - {bank['location']}")
+            st.write(f"📍 Coordinates: {bank['coordinates']}")
+            st.write("🩸 Blood Groups Available: " + ", ".join(bank['blood_groups']))
+            st.write("---")
+
+# Optional Log Out Button if Logged In
+if "logged_in_user" in st.session_state:
+    st.sidebar.button("Log Out", on_click=lambda: st.session_state.pop("logged_in_user"))
