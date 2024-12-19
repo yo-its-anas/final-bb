@@ -1,12 +1,12 @@
 import streamlit as st
 import pandas as pd
 import geopy.distance as geopy_distance
+from streamlit_lottie import st_lottie
 import requests
 import random
 import string
 
-# Function to load Lottie animation (cached for faster load)
-@st.cache_data
+# Function to load Lottie animation
 def load_lottie_url(url):
     r = requests.get(url)
     if r.status_code != 200:
@@ -114,6 +114,7 @@ elif auth_option == "Sign In":
         signin_submit = st.form_submit_button("Sign In")
 
     if signin_submit:
+        # Dummy validation: Accept any non-empty username and password
         if username_input and password_input:
             st.session_state["logged_in_user"] = username_input
             st.sidebar.success(f"👋 Welcome, {username_input}!")
@@ -124,18 +125,31 @@ elif auth_option == "Sign In":
 
 # Main App Page - Blood Bank Finder
 st.markdown(f"### Welcome to Karachi Blood Bank Finder 🩸")
-st.json(lottie_animation)  # This will load the old animation
+st_lottie(lottie_animation, height=200)
 
 # Blood Bank Finder Section
 st.title("Find Blood Banks in Karachi")
 
-# Data for Blood Banks with 20 Locations (Reduced set for performance)
+# Data for Blood Banks with 20 Locations
 blood_banks = pd.DataFrame([
     {"name": "Central Blood Bank", "location": "Saddar", "coordinates": (24.8607, 67.0011), "blood_groups": ["A+", "O+"]},
     {"name": "City Blood Bank", "location": "Clifton", "coordinates": (24.8138, 67.0300), "blood_groups": ["B+", "AB+"]},
     {"name": "Fatimid Foundation", "location": "North Nazimabad", "coordinates": (24.9425, 67.0728), "blood_groups": ["A-", "O+"]},
     {"name": "Indus Hospital", "location": "Korangi", "coordinates": (24.8205, 67.1279), "blood_groups": ["O-", "B+"]},
     {"name": "Liaquat National Hospital", "location": "Gulshan-e-Iqbal", "coordinates": (24.9215, 67.0954), "blood_groups": ["A+", "AB-"]},
+    {"name": "Aga Khan University Hospital", "location": "Karachi University", "coordinates": (24.8256, 67.0465), "blood_groups": ["O-", "AB+"]},
+    {"name": "The Blood Bank", "location": "Ferozabad", "coordinates": (24.8880, 67.0708), "blood_groups": ["A-", "B-"]},
+    {"name": "JPMC Blood Bank", "location": "Saddar", "coordinates": (24.8556, 67.0092), "blood_groups": ["B+", "O+"]},
+    {"name": "Karachi Blood Bank", "location": "Korangi", "coordinates": (24.8321, 67.0731), "blood_groups": ["O-", "A+"]},
+    {"name": "Pakistan Red Crescent", "location": "Karachi City", "coordinates": (24.8772, 67.0240), "blood_groups": ["AB-", "O+"]},
+    {"name": "Sheikh Zayed Hospital", "location": "Abul Hasan Ispahani Road", "coordinates": (24.9402, 67.1212), "blood_groups": ["A-", "AB+"]},
+    {"name": "Quaid-e-Azam Blood Bank", "location": "Jamshed Road", "coordinates": (24.8700, 67.0142), "blood_groups": ["A+", "B+"]},
+    {"name": "National Blood Bank", "location": "Hassan Square", "coordinates": (24.8552, 67.0564), "blood_groups": ["O-", "A+"]},
+    {"name": "Ziauddin Blood Bank", "location": "North Karachi", "coordinates": (24.9644, 67.0599), "blood_groups": ["AB+", "B+"]},
+    {"name": "Holy Family Blood Bank", "location": "Naya Nazimabad", "coordinates": (24.9271, 67.0505), "blood_groups": ["O+", "AB-"]},
+    {"name": "Tahir Blood Bank", "location": "Gulistan-e-Johar", "coordinates": (24.9286, 67.1201), "blood_groups": ["B-", "O+"]},
+    {"name": "Pakistan Institute of Blood Transfusion", "location": "Saddar", "coordinates": (24.8522, 67.0202), "blood_groups": ["A-", "B+"]},
+    {"name": "Sindh Blood Transfusion Authority", "location": "Karachi", "coordinates": (24.9030, 67.0501), "blood_groups": ["AB-", "O+"]},
 ])
 
 # User Input for Blood Bank Finder (Always Visible)
@@ -151,14 +165,12 @@ if submit_button:
         st.subheader("Available Blood Banks near you:")
         available_banks = blood_banks[blood_banks["blood_groups"].apply(lambda x: blood_group_needed in x)]
         if available_banks.empty:
-            st.markdown(f"🔍 Searching for nearest blood banks with **{blood_group_needed}**...")
-            
-            # Pre-calculated sample location (Karachi)
-            user_coordinates = (24.8607, 67.0011)
+            st.markdown(f"❌ No blood banks available with **{blood_group_needed}** in your location.")
+            st.markdown("However, here are the nearest blood banks:")
             
             # Calculate nearest available blood banks
             available_banks = blood_banks.copy()
-            available_banks['distance'] = available_banks['coordinates'].apply(lambda x: geopy_distance.distance(user_coordinates, x).km)
+            available_banks['distance'] = available_banks['coordinates'].apply(lambda x: geopy_distance.distance((24.8607, 67.0011), x).km)
             nearest_banks = available_banks.sort_values("distance").head(3)
             
             for _, bank in nearest_banks.iterrows():
