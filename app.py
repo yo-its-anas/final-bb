@@ -54,24 +54,24 @@ st.title("Find Blood Banks in Karachi")
 
 # Blood Bank Data
 blood_banks = pd.DataFrame([
-    {"name": "Central Blood Bank", "location": "Saddar", "coordinates": (24.8607, 67.0011), "blood_groups": ["A+", "O+"]},
-    {"name": "City Blood Bank", "location": "Clifton", "coordinates": (24.8138, 67.0300), "blood_groups": ["B+", "AB+"]},
-    {"name": "Fatimid Foundation", "location": "North Nazimabad", "coordinates": (24.9425, 67.0728), "blood_groups": ["A-", "O+"]},
+    {"name": "Central Blood Bank", "location": "Saddar", "coordinates": (24.8607, 67.0011), "blood_groups": ["A+","B+", "O+"]},
+    {"name": "City Blood Bank", "location": "Clifton", "coordinates": (24.8138, 67.0300), "blood_groups": ["B+","O-". "AB+"]},
+    {"name": "Fatimid Foundation", "location": "North Nazimabad", "coordinates": (24.9425, 67.0728), "blood_groups": ["A-", "O+","O-"]},
     {"name": "Indus Hospital", "location": "Korangi", "coordinates": (24.8205, 67.1279), "blood_groups": ["O-", "B+"]},
     {"name": "Liaquat National Hospital", "location": "Gulshan-e-Iqbal", "coordinates": (24.9215, 67.0954), "blood_groups": ["A+", "AB-"]},
     {"name": "Aga Khan University Hospital", "location": "Karachi University", "coordinates": (24.8256, 67.0465), "blood_groups": ["O-", "AB+"]},
     {"name": "The Blood Bank", "location": "Ferozabad", "coordinates": (24.8880, 67.0708), "blood_groups": ["A-", "B-"]},
     {"name": "JPMC Blood Bank", "location": "Saddar", "coordinates": (24.8556, 67.0092), "blood_groups": ["B+", "O+"]},
-    {"name": "Karachi Blood Bank", "location": "Korangi", "coordinates": (24.8321, 67.0731), "blood_groups": ["O-", "A+"]},
+    {"name": "Karachi Blood Bank", "location": "Korangi", "coordinates": (24.8321, 67.0731), "blood_groups": ["O-","B+", "A+"]},
     {"name": "Pakistan Red Crescent", "location": "Karachi City", "coordinates": (24.8772, 67.0240), "blood_groups": ["AB-", "O+"]},
     {"name": "Sheikh Zayed Hospital", "location": "Abul Hasan Ispahani Road", "coordinates": (24.9402, 67.1212), "blood_groups": ["A-", "AB+"]},
-    {"name": "Quaid-e-Azam Blood Bank", "location": "Jamshed Road", "coordinates": (24.8700, 67.0142), "blood_groups": ["A+", "B+"]},
+    {"name": "Quaid-e-Azam Blood Bank", "location": "Jamshed Road", "coordinates": (24.8700, 67.0142), "blood_groups": ["A+","O-", "B+"]},
     {"name": "National Blood Bank", "location": "Hassan Square", "coordinates": (24.8552, 67.0564), "blood_groups": ["O-", "A+"]},
     {"name": "Ziauddin Blood Bank", "location": "North Karachi", "coordinates": (24.9644, 67.0599), "blood_groups": ["AB+", "B+"]},
     {"name": "Holy Family Blood Bank", "location": "Naya Nazimabad", "coordinates": (24.9271, 67.0505), "blood_groups": ["O+", "AB-"]},
     {"name": "Tahir Blood Bank", "location": "Gulistan-e-Johar", "coordinates": (24.9286, 67.1201), "blood_groups": ["B-", "O+"]},
-    {"name": "Pakistan Institute of Blood Transfusion", "location": "Saddar", "coordinates": (24.8522, 67.0202), "blood_groups": ["A-", "B+"]},
-    {"name": "Sindh Blood Transfusion Authority", "location": "Karachi", "coordinates": (24.9030, 67.0501), "blood_groups": ["AB-", "O+"]},
+    {"name": "Pakistan Institute of Blood Transfusion", "location": "Saddar", "coordinates": (24.8522, 67.0202), "blood_groups": ["A-","O-", "B+"]},
+    {"name": "Sindh Blood Transfusion Authority", "location": "Karachi", "coordinates": (24.9030, 67.0501), "blood_groups": ["AB-","O-", "O+"]},
 ])
 
 with st.form("blood_search"):
