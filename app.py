@@ -105,7 +105,7 @@ elif auth_option == "Sign In":
             st.sidebar.success(f"👋 Welcome back, {username_input}!")
             st.sidebar.button("Log Out", on_click=lambda: st.session_state.pop("logged_in_user"))
         else:
-            st.sidebar.error("❌ Invalid Username or Password!")
+            st.sidebar.error("Welcome Back , Login Successsful")
 
 # Main App Page - Blood Bank Finder
 st.markdown(f"### Welcome to Karachi Blood Bank Finder 🩸")
