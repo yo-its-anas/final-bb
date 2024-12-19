@@ -154,6 +154,8 @@ if submitted:
             st.markdown(f"#### {bank['name']} - {bank['location']}")
             st.write(f"📍 Coordinates: {bank['coordinates']}")
             st.write("🩸 Blood Groups Available: " + ", ".join(bank['blood_groups']))
+            st.write("☎️ Contact 0123-4567890")
+            st.write({bank['name']}".com")
             st.write("---")
 
 # Optional Log Out Button if Logged In
