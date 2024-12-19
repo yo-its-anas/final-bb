@@ -155,7 +155,7 @@ if submitted:
             st.write(f"📍 Coordinates: {bank['coordinates']}")
             st.write("🩸 Blood Groups Available: " + ", ".join(bank['blood_groups']))
             st.write("☎️ Contact 0123-4567890")
-            st.write({bank['name']}".com")
+            st.write("Visit our [website](https://www.example.com)")
             st.write("---")
 
 # Optional Log Out Button if Logged In
